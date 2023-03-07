@@ -39,8 +39,8 @@ class VGG19_relu(torch.nn.Module):
     def __init__(self):
         super(VGG19_relu, self).__init__()
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        cnn = models.vgg19(pretrained=False)
-        cnn.load_state_dict(torch.load(os.path.join('./pre_train/', 'vgg19-dcbb9e9d.pth')))
+        cnn = models.vgg19(pretrained=True)
+        #cnn.load_state_dict(torch.load(os.path.join('./pre_train/', 'vgg19-dcbb9e9d.pth')))
         cnn = cnn.to(self.device)
         features = cnn.features
         self.relu1_1 = torch.nn.Sequential()
