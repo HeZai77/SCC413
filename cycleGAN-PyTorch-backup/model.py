@@ -115,14 +115,14 @@ class cycleGAN(object):
         dataset_dirs = utils.get_traindata_link(args.dataset_dir)
         print("dataset_dirs: ", dataset_dirs)
 
-        ## 读取非成对数据
+        ## load unpair data
         a_dataset = SubImageDataset(root=dataset_dirs['trainA'], transforms_=transformA, dataname="A")
         a_loader = torch.utils.data.DataLoader(a_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
 
         b_dataset = SubImageDataset(root=dataset_dirs['trainB'], transforms_=transformB, dataname="B")
         b_loader = torch.utils.data.DataLoader(b_dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
 
-        ## 读取成对数据
+        ## load pair data
         dataset = ImageDataset(root=args.dataset_dir, transforms_=transformA)
         loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True, num_workers=0)
 
@@ -177,8 +177,6 @@ class cycleGAN(object):
                     ###################################################
                     a_cycle_loss = self.L1(a_recon, a_real) * args.lamda
                     b_cycle_loss = self.L1(b_recon, b_real) * args.lamda
-
-                    ## 感知损失
                     # g_percep_loss = self.criterionPercep((a_fake + 1.) / 2., (a_real + 1.) / 2.)
 
                     # Total generators losses
@@ -244,12 +242,9 @@ class cycleGAN(object):
                                             (epoch, i + 1, min(len(a_loader), len(b_loader)),
                                                             gen_loss, a_dis_loss+b_dis_loss))
 
-            ## 保存每个模型的生成效果图
             pic = (torch.cat([a_real_vis, b_fake_vis, a_recon_vis, b_real_vis, a_fake_vis, b_recon_vis], dim=0).data + 1) / 2.0
-            ## 保存生成图片的位置
             if not os.path.isdir(args.checkpoint_dir):
                 os.makedirs(args.checkpoint_dir, exist_ok=True)
-            ## 保存图片数据 (保存的数据有，A真实->A生成->A重建；B真实->B生成->B重建)
             torchvision.utils.save_image(pic, args.checkpoint_dir + '/sample_epoch%d.jpg' % (args.curr_epoch), nrow=3)
 
             # Override the latest checkpoint
