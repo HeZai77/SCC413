@@ -8,7 +8,7 @@ import test as tst
 
 def get_args():
     parser = ArgumentParser(description='cycleGAN PyTorch')
-    parser.add_argument('--epochs', type=int, default=100)                                              ### 训练 epoch 数量
+    parser.add_argument('--epochs', type=int, default=100)                          
     parser.add_argument('--decay_epoch', type=int, default=40)
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--lr', type=float, default=0.0002)
