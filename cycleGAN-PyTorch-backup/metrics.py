@@ -14,10 +14,9 @@ import argparse
 
 
 def parse_opt():
-    """ 参数设置 """
     parser = argparse.ArgumentParser(description='PSNR SSIM LPIPS', add_help=False)
-    parser.add_argument('--gt_dir', default='./results_gray/gt')   ## 真实数据
-    parser.add_argument('--input_dir', default='./results_gray/gen')   ## 生成数据
+    parser.add_argument('--gt_dir', default='./results_gray/gt')   ## real data
+    parser.add_argument('--input_dir', default='./results_gray/gen')   ## fake data
     parser.add_argument('-v', '--version', type=str, default='0.1')
     args = parser.parse_args()
     return args
@@ -62,11 +61,9 @@ class DataLoaderVal(Dataset):
 
 if __name__ == '__main__':
 
-    ## 参数解析
     args = parse_opt()
 
-    ## 读取数据集
-    test_dataset = DataLoaderVal(args=args)
+    test_dataset = DataLoaderVal(args=args)# load dataset
     test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False, num_workers=0, drop_last=False)
 
     # ---------------------- PSNR + SSIM ----------------------
@@ -83,7 +80,6 @@ if __name__ == '__main__':
     ssim_val_rgb = sum(ssim_val_rgb) / len(test_dataset)
 
     # ---------------------- LPIPS ----------------------
-    ## 初始化模型
     lpips_fun = lpips.LPIPS(net='alex', version=args.version)
     files = os.listdir(args.gt_dir)
     i = 0
@@ -91,11 +87,9 @@ if __name__ == '__main__':
     average_lpips_distance = 0
     for file in files:
         try:
-            ## 加载图像数据
             img0 = lpips.im2tensor(lpips.load_image(os.path.join(args.gt_dir, file)))
             img1 = lpips.im2tensor(lpips.load_image(os.path.join(args.input_dir, file)))
 
-            ## 计算指标
             current_lpips_distance = lpips_fun.forward(img0, img1)
             total_lpips_distance = total_lpips_distance + current_lpips_distance
             i = i + 1
