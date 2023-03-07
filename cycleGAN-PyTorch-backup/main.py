@@ -30,7 +30,7 @@ def get_args():
     parser.add_argument('--ndf', type=int, default=64, help='# of discrim filters in first conv layer')
     parser.add_argument('--gen_net', type=str, default='resnet_9blocks')
     parser.add_argument('--dis_net', type=str, default='n_layers')
-    parser.add_argument('--curr_epoch', type=int, default=140, help='load pretrain model id')
+    parser.add_argument('--curr_epoch', type=int, default=99, help='load pretrain model id')
     args = parser.parse_args()
     return args
 
